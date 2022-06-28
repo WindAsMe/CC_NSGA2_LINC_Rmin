@@ -23,6 +23,7 @@ moea_NSGA3_templet : class - 多目标进化优化NSGA-III算法类
                  problem,
                  population,
                  group,
+                 Pareto_font_index,
                  MAXGEN=None,
                  MAXTIME=None,
                  MAXEVALS=None,
@@ -40,6 +41,8 @@ moea_NSGA3_templet : class - 多目标进化优化NSGA-III算法类
             raise RuntimeError('传入的种群对象必须是单染色体的种群类型。')
         self.name = 'NSGA3'
         self.group = group
+        self.Pareto_font_index = Pareto_font_index
+
         if self.problem.M < 10:
             self.ndSort = ea.ndsortESS  # 采用ENS_SS进行非支配排序
         else:
@@ -81,31 +84,33 @@ moea_NSGA3_templet : class - 多目标进化优化NSGA-III算法类
         self.initialization()  # 初始化算法类的一些动态参数
         # ===========================准备进化============================
         uniformPoint, NIND = ea.crtup(self.problem.M, population.sizes)  # 生成在单位目标维度上均匀分布的参考点集
-        # population.initChrom(NIND)  # 初始化种群染色体矩阵，此时种群规模将调整为uniformPoint点集的大小，initChrom函数会把种群规模给重置
+        population.initChrom(NIND)  # 初始化种群染色体矩阵，此时种群规模将调整为uniformPoint点集的大小，initChrom函数会把种群规模给重置
         # 插入先验知识（注意：这里不会对先知种群prophetPop的合法性进行检查）
         if prophetPop is not None:
             population = (prophetPop + population)[:NIND]  # 插入先知种群
+
+        sub_Dim = len(population.Chrom)
+        sub_Pareto_font_index = self.Pareto_font_index[0:sub_Dim]
+        for i in range(len(self.group)):
+            sub_Pareto_font_index[:, self.group[i]] = population.Chrom[:, i]
+        population.ObjV = self.problem.evalVars(sub_Pareto_font_index)
+
+
         # self.call_aimFunc(population)  # 计算种群的目标函数值
         # ===========================开始进化============================
         while not self.terminated(population):
+            sub_Dim = len(population.Chrom)
             # 选择个体参与进化
             offspring = population[ea.selecting(self.selFunc, population.sizes)]
             # 对选出的个体进行进化操作
             offspring.Chrom = self.recOper.do(offspring.Chrom)  # 重组
             offspring.Chrom = self.mutOper.do(offspring.Encoding, offspring.Chrom, offspring.Field)  # 变异
-            temp_Chrom = copy.deepcopy(self.population.Chrom)
+            sub_Pareto_font_index = self.Pareto_font_index[0:sub_Dim]
+            for i in range(len(self.group)):
+                sub_Pareto_font_index[:, self.group[i]] = offspring.Chrom[:, i]
+            offspring.ObjV = self.problem.evalVars(sub_Pareto_font_index)
 
-            for e in self.group:
-                temp_Chrom[:, e] = offspring.Chrom[:, e]
-            offspring.Chrom = temp_Chrom
-            offspring.Phen = temp_Chrom
-            self.call_aimFunc(offspring)  # 求进化后个体的目标函数值
-            # 重插入生成新一代种群
-            temp_Chrom = copy.deepcopy(self.population.Chrom)
+            # self.call_aimFunc(offspring)  # 求进化后个体的目标函数值
             population = self.reinsertion(population, offspring, len(population.Chrom), uniformPoint)
 
-            for e in self.group:
-                temp_Chrom[:, e] = population.Chrom[:, e]
-            population.Chrom = temp_Chrom
-            population.Phen = temp_Chrom
         return self.finishing(population)  # 调用finishing完成后续工作并返回结果

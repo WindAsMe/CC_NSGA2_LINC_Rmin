@@ -1,4 +1,5 @@
 from geatpy.benchmarks.mops import zdt, dtlz, uf
+
 from MOEA import NSGA
 from Grouping import Comparison, Proposal
 import geatpy as ea
@@ -8,14 +9,7 @@ import matplotlib.pyplot as plt
 from optproblems import wfg
 
 
-def initial_population(NIND, problem):
-    Encoding = 'RI'  # 编码方式
-    Field = ea.crtfld(Encoding, problem.varTypes, problem.ranges, problem.borders)
-    pop = ea.Population(Encoding, Field, NIND)
-    pop.initChrom(NIND)
-    pop.Phen = pop.Chrom
-    pop.ObjV = problem.evalVars(pop.Phen)
-    return pop
+
 
 
 def draw_pareto(No_obj, CC_obj, G_obj):
@@ -52,11 +46,29 @@ def write_cost(data, path):
         f.close()
 
 
+def draw_pareto_2D(name, CC_obj, G_obj, DG_obj, LIMD_obj, Proposal_obj, ref):
+
+    font_title = {'size': 18}
+    font = {'size': 16}
+
+    plt.title("Pareto Front of " + name, font_title)
+    plt.xlabel("$f_1$", font)
+    plt.ylabel("$f_2$", font)
+    plt.scatter(G_obj[:, 0], G_obj[:, 1], marker="v", label="CC_NSGA3_G")
+    plt.scatter(DG_obj[:, 0], DG_obj[:, 1], marker="^", label="CC_NSGA3_DG")
+    plt.scatter(CC_obj[:, 0], CC_obj[:, 1], marker="+", label="CC_NSGA3")
+    plt.scatter(LIMD_obj[:, 0], LIMD_obj[:, 1], marker="o", label="CC_NSGA3_LIMD")
+    plt.scatter(Proposal_obj[:, 0], Proposal_obj[:, 1], marker="*", label="CC_NSGA3_LINC-Rmin")
+    plt.scatter(ref[:, 0], ref[:, 1], marker="<", label="Reference")
+    plt.legend()
+    plt.show()
+
+
 if __name__ == '__main__':
-    Dim = 2000
-    FEs = 3000000
-    NIND = 100
-    Gene_len = 8
+    Dim = 1000
+    FEs = 1500000
+    NIND = 50
+    Gene_len = 7
     trial_run = 1
     this_path = path.dirname(path.realpath(__file__))
 
@@ -67,8 +79,8 @@ if __name__ == '__main__':
     # Problems = [wfg.WFG1()]
     for func_num in range(0, len(Problems)):
         problem = Problems[func_num]
-        print("func: ", problem.name)
-        #
+
+        CC_obj_path = this_path + "/Data/obj/CC/" + problem.name
         G_obj_path = this_path + "/Data/obj/G/" + problem.name
         DG_obj_path = this_path + "/Data/obj/DG/" + problem.name
         LIMD_obj_path = this_path + "/Data/obj/LIMD/" + problem.name
@@ -78,6 +90,7 @@ if __name__ == '__main__':
         LIMD_cost_path = this_path + "/Data/cost/LIMD/" + problem.name
         Proposal_cost_path = this_path + "/Data/cost/Proposal/" + problem.name
 
+        CC_groups = Comparison.CCDE(Dim)
         DG_groups, DG_cost = Comparison.DECC_DG(Dim, problem)
         LIMD_groups, LIMD_cost = Comparison.LIMD(Dim, problem)
 
@@ -86,30 +99,31 @@ if __name__ == '__main__':
 
         for i in range(trial_run):
             """Decomposition"""
-
-            G_groups = Comparison.DECC_G(Dim, 20, 100)
+            G_groups = Comparison.DECC_G(Dim, 10, 100)
             Proposal_groups, Proposal_cost = Proposal.EGALINC_Rmin(Dim, Gene_len, problem, 5, problem.ranges, 0)
-
             write_cost(Proposal_cost, Proposal_cost_path)
 
-            G_std_iter = int(FEs / NIND / Dim)
-            DG_std_iter = int((FEs - DG_cost) / NIND / Dim)
-            LIMD_std_iter = int((FEs - LIMD_cost) / NIND / Dim)
-            Proposal_std_iter = int((FEs - Proposal_cost) / NIND / Dim)
+            CC_Max_iter = int(FEs / NIND / Dim)
+            G_Max_iter = int(FEs / NIND / Dim)
+            DG_Max_iter = int((FEs - DG_cost) / NIND / Dim)
+            LIMD_Max_iter = int((FEs - LIMD_cost) / NIND / Dim)
+            Proposal_Max_iter = int((FEs - Proposal_cost) / NIND / Dim)
 
-            init_Pop = initial_population(NIND, problem)
+            CC_ObjV = NSGA.CC_NSGA(problem, NIND, CC_groups, CC_Max_iter)
+            write_obj(CC_ObjV, CC_obj_path)
 
-            G_ObjV = NSGA.CC_NSGA(problem, init_Pop, G_groups, G_std_iter)
+            G_ObjV = NSGA.CC_NSGA(problem, NIND, G_groups, G_Max_iter)
             write_obj(G_ObjV, G_obj_path)
 
-            DG_ObjV = NSGA.CC_NSGA(problem, init_Pop, DG_groups, DG_std_iter)
+            DG_ObjV = NSGA.CC_NSGA(problem, NIND, DG_groups, DG_Max_iter)
             write_obj(DG_ObjV, DG_obj_path)
 
-            LIMD_ObjV = NSGA.CC_NSGA(problem, init_Pop, LIMD_groups, LIMD_std_iter)
+            LIMD_ObjV = NSGA.CC_NSGA(problem, NIND, LIMD_groups, LIMD_Max_iter)
             write_obj(LIMD_ObjV, LIMD_obj_path)
 
-            Proposal_ObjV = NSGA.CC_NSGA(problem, init_Pop, Proposal_groups, Proposal_std_iter)
+            Proposal_ObjV = NSGA.CC_NSGA(problem, NIND, Proposal_groups, Proposal_Max_iter)
             write_obj(Proposal_ObjV, Proposal_obj_path)
 
+            # draw_pareto_2D(problem.name, CC_ObjV, G_ObjV, DG_ObjV, LIMD_ObjV, Proposal_ObjV, problem.calReferObjV())
 
 
