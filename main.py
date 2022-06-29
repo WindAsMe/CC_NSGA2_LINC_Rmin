@@ -29,14 +29,19 @@ def draw_pareto(No_obj, CC_obj, G_obj):
 
 def write_obj(data, path):
     with open(path, 'a+') as f:
-        for l in data:
+        f.write('[')
+        for i in range(len(data)):
             f.write('[')
-            for i in range(len(l)):
-                if i == len(l) - 1:
-                    f.write(str(l[i]))
+            for j in range(len(data[i])):
+                if j == len(data[i]) - 1:
+                    f.write(str(data[i][j]))
                 else:
-                    f.write(str(l[i]) + ', ')
-            f.write('],')
+                    f.write(str(data[i][j]) + ', ')
+            if i == len(data) - 1:
+                f.write(']')
+            else:
+                f.write('],')
+        f.write("],\n")
         f.close()
 
 
@@ -72,13 +77,14 @@ if __name__ == '__main__':
     trial_run = 1
     this_path = path.dirname(path.realpath(__file__))
 
-    Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim), zdt.ZDT4.ZDT4(Dim=Dim),
+    Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim),
                 zdt.ZDT5.ZDT5(Dim=Dim), zdt.ZDT6.ZDT6(Dim=Dim), dtlz.DTLZ1.DTLZ1(Dim=Dim), dtlz.DTLZ2.DTLZ2(Dim=Dim),
                 dtlz.DTLZ3.DTLZ3(Dim=Dim), dtlz.DTLZ4.DTLZ4(Dim=Dim), dtlz.DTLZ5.DTLZ5(Dim=Dim),
                 dtlz.DTLZ6.DTLZ6(Dim=Dim), dtlz.DTLZ7.DTLZ7(Dim=Dim), uf.UF1.UF1(Dim=Dim), uf.UF2.UF2(Dim=Dim)]
     # Problems = [wfg.WFG1()]
     for func_num in range(0, len(Problems)):
         problem = Problems[func_num]
+        print("problem: ", problem.name)
 
         CC_obj_path = this_path + "/Data/obj/CC/" + problem.name
         G_obj_path = this_path + "/Data/obj/G/" + problem.name
@@ -111,18 +117,23 @@ if __name__ == '__main__':
 
             CC_ObjV = NSGA.CC_NSGA(problem, NIND, CC_groups, CC_Max_iter)
             write_obj(CC_ObjV, CC_obj_path)
+            print("    CC finish")
 
             G_ObjV = NSGA.CC_NSGA(problem, NIND, G_groups, G_Max_iter)
             write_obj(G_ObjV, G_obj_path)
+            print("    G finish")
 
             DG_ObjV = NSGA.CC_NSGA(problem, NIND, DG_groups, DG_Max_iter)
             write_obj(DG_ObjV, DG_obj_path)
+            print("    DG finish")
 
             LIMD_ObjV = NSGA.CC_NSGA(problem, NIND, LIMD_groups, LIMD_Max_iter)
             write_obj(LIMD_ObjV, LIMD_obj_path)
+            print("    LIMD finish")
 
             Proposal_ObjV = NSGA.CC_NSGA(problem, NIND, Proposal_groups, Proposal_Max_iter)
             write_obj(Proposal_ObjV, Proposal_obj_path)
+            print("    Proposal finish")
 
             # draw_pareto_2D(problem.name, CC_ObjV, G_ObjV, DG_ObjV, LIMD_ObjV, Proposal_ObjV, problem.calReferObjV())
 
