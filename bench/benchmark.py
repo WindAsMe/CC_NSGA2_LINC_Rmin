@@ -34,7 +34,7 @@ def object_function(base_fitness, groups_fitness, M, group_size):
     base_fitness = np.array(base_fitness)
     groups_fitness = np.array(groups_fitness)
     for i in range(M):
-        error += (weight * abs(1 - sum(groups_fitness[:, i]) / sum(base_fitness[:, i])))
+        error += (weight * abs(sum(groups_fitness[:, i]) - sum(base_fitness[:, i])))
     return error / group_size
 
 

@@ -9,9 +9,6 @@ import matplotlib.pyplot as plt
 from optproblems import wfg
 
 
-
-
-
 def draw_pareto(No_obj, CC_obj, G_obj):
     font_title = {'size': 18}
     font = {'size': 16}
@@ -73,11 +70,11 @@ if __name__ == '__main__':
     Dim = 1000
     FEs = 1500000
     NIND = 50
-    Gene_len = 7
-    trial_run = 1
+    Gene_len = 8
+    trial_run = 5
     this_path = path.dirname(path.realpath(__file__))
 
-    Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim),
+    Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim), zdt.ZDT4.ZDT4(Dim=Dim),
                 zdt.ZDT5.ZDT5(Dim=Dim), zdt.ZDT6.ZDT6(Dim=Dim), dtlz.DTLZ1.DTLZ1(Dim=Dim), dtlz.DTLZ2.DTLZ2(Dim=Dim),
                 dtlz.DTLZ3.DTLZ3(Dim=Dim), dtlz.DTLZ4.DTLZ4(Dim=Dim), dtlz.DTLZ5.DTLZ5(Dim=Dim),
                 dtlz.DTLZ6.DTLZ6(Dim=Dim), dtlz.DTLZ7.DTLZ7(Dim=Dim), uf.UF1.UF1(Dim=Dim), uf.UF2.UF2(Dim=Dim)]
@@ -131,9 +128,9 @@ if __name__ == '__main__':
             write_obj(LIMD_ObjV, LIMD_obj_path)
             print("    LIMD finish")
 
-            Proposal_ObjV = NSGA.CC_NSGA(problem, NIND, Proposal_groups, Proposal_Max_iter)
-            write_obj(Proposal_ObjV, Proposal_obj_path)
-            print("    Proposal finish")
+            # Proposal_ObjV = NSGA.CC_NSGA(problem, NIND, Proposal_groups, Proposal_Max_iter)
+            # write_obj(Proposal_ObjV, Proposal_obj_path)
+            # print("    Proposal finish")
 
             # draw_pareto_2D(problem.name, CC_ObjV, G_ObjV, DG_ObjV, LIMD_ObjV, Proposal_ObjV, problem.calReferObjV())
 

@@ -45,6 +45,8 @@ def CC_NSGA(problem, NIND, groups, Max_iter):
     [levels, criLevel] = ea.ndsortESS(Pareto_font)
     ObjV = []
     for i in range(len(levels)):
+        if len(Pareto_font) >= 100:
+            break
         if levels[i] == 1:
             ObjV.append(Pareto_font[i])
     return np.array(ObjV)

@@ -24,7 +24,7 @@ def EGALINC_Rmin(Dim, Gene_len, problem, pop_size, scale_range, cost):
     cost += len(random_Pop)
     groups_fitness, cost = benchmark.groups_fitness(final_groups, random_Pop, problem, cost, intercept)
     current_best_obj = benchmark.object_function(base_fitness, groups_fitness, problem.M, len(final_groups))
-
+    print(current_best_obj)
     """
     Apply GA
     """
