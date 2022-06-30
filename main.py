@@ -110,7 +110,7 @@ if __name__ == '__main__':
             G_Max_iter = int(FEs / NIND / Dim)
             DG_Max_iter = int((FEs - DG_cost) / NIND / Dim)
             LIMD_Max_iter = int((FEs - LIMD_cost) / NIND / Dim)
-            Proposal_Max_iter = int((FEs - Proposal_cost) / NIND / Dim)
+            # Proposal_Max_iter = int((FEs - Proposal_cost) / NIND / Dim)
 
             CC_ObjV = NSGA.CC_NSGA(problem, NIND, CC_groups, CC_Max_iter)
             write_obj(CC_ObjV, CC_obj_path)
