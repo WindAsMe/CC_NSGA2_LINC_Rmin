@@ -79,7 +79,7 @@ if __name__ == '__main__':
                 dtlz.DTLZ3.DTLZ3(Dim=Dim), dtlz.DTLZ4.DTLZ4(Dim=Dim), dtlz.DTLZ5.DTLZ5(Dim=Dim),
                 dtlz.DTLZ6.DTLZ6(Dim=Dim), dtlz.DTLZ7.DTLZ7(Dim=Dim), uf.UF1.UF1(Dim=Dim), uf.UF2.UF2(Dim=Dim)]
     # Problems = [wfg.WFG1()]
-    for func_num in range(0, len(Problems)):
+    for func_num in range(4, len(Problems)):
         problem = Problems[func_num]
         print("problem: ", problem.name)
 
@@ -103,8 +103,8 @@ if __name__ == '__main__':
         for i in range(trial_run):
             """Decomposition"""
             G_groups = Comparison.DECC_G(Dim, 10, 100)
-            Proposal_groups, Proposal_cost = Proposal.EGALINC_Rmin(Dim, Gene_len, problem, 5, problem.ranges, 0)
-            write_cost(Proposal_cost, Proposal_cost_path)
+            # Proposal_groups, Proposal_cost = Proposal.EGALINC_Rmin(Dim, Gene_len, problem, 5, problem.ranges, 0)
+            # write_cost(Proposal_cost, Proposal_cost_path)
 
             CC_Max_iter = int(FEs / NIND / Dim)
             G_Max_iter = int(FEs / NIND / Dim)
