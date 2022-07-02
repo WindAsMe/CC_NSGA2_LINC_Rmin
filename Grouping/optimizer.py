@@ -15,6 +15,6 @@ def EGA_optmize(Dim, gene_len, multi_problem, random_Pop, NIND, Max_iter, interc
     algorithm = ea.soea_EGA_templet(problem, ea.Population(Encoding='BG', NIND=NIND), MAXGEN=Max_iter, logTras=0)
     solution = ea.optimize(algorithm, drawing=0, outputMsg=False, drawLog=False, saveFlag=False)
     groups, obj = solution['Vars'][0], solution['ObjV']
-    MA_groups = help.Phen_Groups(groups, help.empty_groups(2 ** gene_len))
+    EGA_groups = help.Phen_Groups(groups, help.empty_groups(2 ** gene_len))
 
-    return MA_groups, obj, problem.cost
+    return EGA_groups, obj, problem.cost

@@ -9,22 +9,22 @@ def EGALINC_Rmin(Dim, Gene_len, problem, pop_size, scale_range, cost):
 
     base = np.array([np.zeros(Dim)])
     intercept = problem.evalVars(base)[0]
+
     """
     Algorithm initialization
     """
     NIND = 20
     Max_iter = 20
     random_Pop = help.random_Population(scale_range, Dim, pop_size)
-
     stop_threshold = 0.1
-
     final_groups = CCDE(Dim)
 
     base_fitness = benchmark.base_fitness(random_Pop, problem, intercept)
+
     cost += len(random_Pop)
     groups_fitness, cost = benchmark.groups_fitness(final_groups, random_Pop, problem, cost, intercept)
-    current_best_obj = benchmark.object_function(base_fitness, groups_fitness, problem.M, len(final_groups))
-    print(current_best_obj)
+    current_best_obj = benchmark.object_function(base_fitness, groups_fitness, problem.M, len(final_groups)) * 0.95
+
     """
     Apply GA
     """

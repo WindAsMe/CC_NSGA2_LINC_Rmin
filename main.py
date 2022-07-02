@@ -70,16 +70,20 @@ if __name__ == '__main__':
     Dim = 1000
     FEs = 1500000
     NIND = 50
-    Gene_len = 8
-    trial_run = 5
+    Gene_len = 7
+    trial_run = 10
     this_path = path.dirname(path.realpath(__file__))
 
-    Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim), zdt.ZDT4.ZDT4(Dim=Dim),
+    # Problems = [zdt.ZDT1.ZDT1(Dim=Dim), zdt.ZDT2.ZDT2(Dim=Dim), zdt.ZDT3.ZDT3(Dim=Dim), zdt.ZDT4.ZDT4(Dim=Dim),
+    #             zdt.ZDT5.ZDT5(Dim=Dim), zdt.ZDT6.ZDT6(Dim=Dim), dtlz.DTLZ1.DTLZ1(Dim=Dim), dtlz.DTLZ2.DTLZ2(Dim=Dim),
+    #             dtlz.DTLZ3.DTLZ3(Dim=Dim), dtlz.DTLZ4.DTLZ4(Dim=Dim), dtlz.DTLZ5.DTLZ5(Dim=Dim),
+    #             dtlz.DTLZ6.DTLZ6(Dim=Dim), dtlz.DTLZ7.DTLZ7(Dim=Dim), uf.UF1.UF1(Dim=Dim), uf.UF2.UF2(Dim=Dim)]
+    Problems = [zdt.ZDT4.ZDT4(Dim=Dim),
                 zdt.ZDT5.ZDT5(Dim=Dim), zdt.ZDT6.ZDT6(Dim=Dim), dtlz.DTLZ1.DTLZ1(Dim=Dim), dtlz.DTLZ2.DTLZ2(Dim=Dim),
                 dtlz.DTLZ3.DTLZ3(Dim=Dim), dtlz.DTLZ4.DTLZ4(Dim=Dim), dtlz.DTLZ5.DTLZ5(Dim=Dim),
                 dtlz.DTLZ6.DTLZ6(Dim=Dim), dtlz.DTLZ7.DTLZ7(Dim=Dim), uf.UF1.UF1(Dim=Dim), uf.UF2.UF2(Dim=Dim)]
     # Problems = [wfg.WFG1()]
-    for func_num in range(4, len(Problems)):
+    for func_num in range(len(Problems)):
         problem = Problems[func_num]
         print("problem: ", problem.name)
 

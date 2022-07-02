@@ -29,13 +29,16 @@ def groups_fitness(groups, Population, problem, cost, intercept):
 # outer interface
 # opt_fitness is calculated by groups_fitness
 def object_function(base_fitness, groups_fitness, M, group_size):
+
     weight = 1 / M
     error = 0
+    pop_size = len(base_fitness)
     base_fitness = np.array(base_fitness)
     groups_fitness = np.array(groups_fitness)
-    for i in range(M):
-        error += (weight * abs(sum(groups_fitness[:, i]) - sum(base_fitness[:, i])))
-    return error / group_size
+    for i in range(pop_size):
+        for j in range(M):
+            error += (weight * ((groups_fitness[i][j] - base_fitness[i][j]) / group_size) ** 2)
+    return error
 
 
 
