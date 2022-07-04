@@ -13,13 +13,13 @@ def CCDE(N):
 def DECC_DG(Dim, problem):
     cost = 2
     groups = CCDE(Dim)
-    intercept = problem.evalVars(np.zeros((1, Dim)))[0]
+    intercept = np.array(problem.evaluate(np.zeros(Dim)))
     for i in range(len(groups)-1):
         if i < len(groups) - 1:
             cost += 2
-            index1 = np.zeros((1, Dim))
-            index1[0][groups[i][0]] = 1
-            delta1 = problem.evalVars(index1)[0] - intercept
+            index1 = np.zeros(Dim)
+            index1[groups[i][0]] = 1
+            delta1 = problem.evaluate(index1) - intercept
             for j in range(i+1, len(groups)):
                 cost += 2
                 if i < len(groups)-1 and j < len(groups) and not DG_Differential(Dim, groups[i][0], groups[j][0], delta1, problem, intercept):
@@ -30,14 +30,14 @@ def DECC_DG(Dim, problem):
 
 def DG_Differential(Dim, e1, e2, a, problem, intercept):
 
-    index1 = np.zeros((1, Dim))
-    index2 = np.zeros((1, Dim))
-    index1[0][e2] = 1
-    index2[0][e1] = 1
-    index2[0][e2] = 1
+    index1 = np.zeros(Dim)
+    index2 = np.zeros(Dim)
+    index1[e2] = 1
+    index2[e1] = 1
+    index2[e2] = 1
 
-    b = problem.evalVars(index1)[0] - intercept
-    c = problem.evalVars(index2)[0] - intercept
+    b = np.array(problem.evaluate(index1)) - intercept
+    c = np.array(problem.evaluate(index2)) - intercept
 
     delta = np.abs(c - (a + b))
     for d in delta:

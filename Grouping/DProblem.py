@@ -30,7 +30,7 @@ class MyProblem(ea.Problem):
             # Decompose the problem depending on
             Empty_groups = help.Phen_Groups(var, help.empty_groups(2 ** self.Gene_len))
 
-            groups_fitness, self.cost = benchmark.groups_fitness(Empty_groups, self.random_Pop, self.problem, self.cost,
+            groups_fitness, self.cost = benchmark.groups_fitness(self.Dim, Empty_groups, self.random_Pop, self.problem, self.cost,
                                                                  self.intercept)
 
             Objs.append([benchmark.object_function(self.base_fitness, groups_fitness, self.problem.M, len(Empty_groups))])

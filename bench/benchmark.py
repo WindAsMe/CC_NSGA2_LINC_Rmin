@@ -4,23 +4,23 @@ import numpy as np
 def base_fitness(Population, problem, intercept):
     fitness = []
     for indi in Population:
-        fitness.append(np.array(problem.evalVars(np.array([indi]))[0]) - np.array(intercept))
+        fitness.append(np.array(problem.evaluate(indi) - np.array(intercept)))
     return fitness
 
 
-def group_individual(group, individual):
-    part_individual = np.zeros(2000)
+def group_individual(Dim, group, individual):
+    part_individual = np.zeros(1000)
     for element in group:
         part_individual[element] = individual[element]
     return part_individual
 
 
-def groups_fitness(groups, Population, problem, cost, intercept):
+def groups_fitness(Dim, M, groups, Population, problem, cost, intercept):
     fitness = []
     for indi in Population:
-        indi_fitness = [0] * problem.M
+        indi_fitness = [0] * M
         for group in groups:
-            indi_fitness += (problem.evalVars(np.array([group_individual(group, indi)]))[0] - intercept)
+            indi_fitness += (problem.evaluate(np.array(group_individual(Dim, group, indi))) - intercept)
             cost += 1
         fitness.append(indi_fitness)
     return fitness, cost

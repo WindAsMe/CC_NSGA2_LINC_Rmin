@@ -5,10 +5,10 @@ from Grouping import optimizer
 from bench import benchmark
 
 
-def EGALINC_Rmin(Dim, Gene_len, problem, pop_size, scale_range, cost):
+def EGALINC_Rmin(Dim, M, Gene_len, problem, pop_size, scale_range, cost):
 
-    base = np.array([np.zeros(Dim)])
-    intercept = problem.evalVars(base)[0]
+    base = np.array(np.zeros(Dim))
+    intercept = problem.evaluate(base)
 
     """
     Algorithm initialization
@@ -22,8 +22,9 @@ def EGALINC_Rmin(Dim, Gene_len, problem, pop_size, scale_range, cost):
     base_fitness = benchmark.base_fitness(random_Pop, problem, intercept)
 
     cost += len(random_Pop)
-    groups_fitness, cost = benchmark.groups_fitness(final_groups, random_Pop, problem, cost, intercept)
-    current_best_obj = benchmark.object_function(base_fitness, groups_fitness, problem.M, len(final_groups)) * 0.95
+    groups_fitness, cost = benchmark.groups_fitness(Dim, M, final_groups, random_Pop, problem, cost, intercept)
+    current_best_obj = benchmark.object_function(base_fitness, groups_fitness, M, len(final_groups))
+    print(current_best_obj)
 
     """
     Apply GA
