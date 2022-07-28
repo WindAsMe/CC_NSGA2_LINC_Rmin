@@ -1,5 +1,3 @@
-from geatpy.benchmarks.mops import zdt, dtlz, uf
-
 from MOEA import NSGA
 from Grouping import Comparison, Proposal
 import geatpy as ea
