@@ -109,7 +109,6 @@ if __name__ == '__main__':
             G_groups = Comparison.DECC_G(Dim, 10, 100)
             # Proposal_groups, Proposal_cost = Proposal.EGALINC_Rmin(Dim, Gene_len, problem, 5, problem.ranges, 0)
             # write_cost(Proposal_cost, Proposal_cost_path)
-
             CC_Max_iter = int(FEs / NIND / Dim)
             G_Max_iter = int(FEs / NIND / Dim)
             DG_Max_iter = int((FEs - DG_cost) / NIND / Dim)
